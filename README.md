@@ -15,7 +15,8 @@ Basedo no cenário conhecido "Sistema de temperatura por CEP" denominado Serviç
 * Caso não seja válido, deve retornar:
   Código HTTP: 422
   Mensagem: invalid zipcode
-  Requisitos - Serviço B (responsável pela orquestração):
+  
+## Requisitos - Serviço B (responsável pela orquestração):
 
 * O sistema deve receber um CEP válido de 8 digitos
 * O sistema deve realizar a pesquisa do CEP e encontrar o nome da localização, a partir disso, deverá retornar as temperaturas e formata-lás em: Celsius, Fahrenheit, Kelvin juntamente com o nome da localização.
