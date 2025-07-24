@@ -33,6 +33,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("Extracted CEP:", cep)
+
+	_, err := checkCep(cep)
+	if err != nil {
+		log.Printf("Invalid CEP: %v\n", err)
+		http.Error(w, "Invalid zipcode", http.StatusUnprocessableEntity)
+		return
+	}
+
 	temperature, err := getTemperature(cep)
 	if err != nil {
 		log.Printf("Error getting temperature: %v\n", err)
@@ -79,6 +87,13 @@ func getTemperature(cep string) (string, error) {
 		return "", fmt.Errorf("service B returned status code %d with body: %s", resp.StatusCode, string(body))
 	}
 	return string(body), nil
+}
+
+func checkCep(cep string) (bool, error) {
+	if len(cep) != 8 {
+		return false, fmt.Errorf("invalid zipcode")
+	}
+	return true, nil
 }
 
 func main() {
