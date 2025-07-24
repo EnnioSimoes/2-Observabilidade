@@ -60,6 +60,7 @@ type Weatherapi struct {
 }
 
 type Temperature struct {
+	City   string  `json:"city"`
 	Temp_C float64 `json:"temp_c"`
 	Temp_K float64 `json:"temp_k"`
 	Temp_F float64 `json:"temp_f"`
@@ -98,6 +99,7 @@ func GetWeather(city string) (*Temperature, error) {
 	}
 
 	t := formatTemparature(w.Current.TempC)
+	t.City = w.Location.Name
 	return &t, nil
 }
 
