@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  service_b:
+    image: golang:1.24
+    container_name: service_b
+    restart: always
+    working_dir: /app
+    ports:
+      - 8081:8081
+    command: >
+      sh -c "go mod download && go test ./... && go run main.go"
+    volumes:
+      - .:/app

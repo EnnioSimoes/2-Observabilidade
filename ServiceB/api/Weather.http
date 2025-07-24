@@ -1,0 +1,2 @@
+GET https://api.weatherapi.com/v1/current.json?key=edccc0360d484d62940133521250907&q=Rio Grande&aqi=no HTTP/1.1
+Content-Type: application/json

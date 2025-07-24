@@ -1,0 +1,10 @@
+// Request: Get temperature by zipcode
+// Method: GET
+// URL: http://localhost:8080/temperature/{zipcode}
+POST http://localhost:8080/temperature HTTP/1.1
+Host: localhost:8080
+Content-Type: application/json
+
+{
+  "cep": "07141210"
+}
