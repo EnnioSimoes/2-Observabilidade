@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/EnnioSimoes/2-Observabilidade/ServiceA/configs"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
 )
@@ -64,7 +65,9 @@ func getTemperature(cep string) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, 2*time.Second)
 	defer cancel()
 
-	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("http://127.0.0.1:8081/temperature/%s", cep), nil)
+	config, _ := configs.LoadConfig()
+
+	req, err := http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s:%d/temperature/%s", config.ServiceBHost, config.ServiceBPort, cep), nil)
 	if err != nil {
 		return "", fmt.Errorf("error creating request for service B: %w", err)
 	}

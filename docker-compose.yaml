@@ -1,0 +1,26 @@
+services:
+  service_a:
+    image: golang:1.24
+    container_name: service_a
+    environment:
+      - SERVICE_B_HOST=http://service_b
+      - SERVICE_B_PORT=8081
+    restart: always
+    working_dir: /app
+    ports:
+      - 8080:8080
+    command: >
+      sh -c "go mod download && go run main.go"
+    volumes:
+      - ./ServiceA:/app
+  service_b:
+    image: golang:1.24
+    container_name: service_b
+    restart: always
+    working_dir: /app
+    ports:
+      - 8081:8081
+    command: >
+      sh -c "go mod download && go run main.go"
+    volumes:
+      - ./ServiceB:/app
