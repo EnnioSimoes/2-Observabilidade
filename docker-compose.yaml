@@ -1,4 +1,33 @@
 services:
+  zipkin:
+    image: openzipkin/zipkin:latest
+    container_name: zipkin
+    ports:
+      - 9411:9411 # Zipkin UI
+    restart: always
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   container_name: prometheus
+  #   ports:
+  #     - 9090:9090
+  #   volumes:
+  #     - ./prometheus.yml:/etc/prometheus/prometheus.yml
+  #   restart: always
+  otel-collector:
+    image: otel/opentelemetry-collector:latest
+    container_name: otel-collector
+    ports:
+      - 8888:8888 # Prometheus metrics exposer
+      - 8889:8889 # Prometheus exporter
+      - 4317:4317 # OTLP gRPC
+      - 4318:4318 # OTLP HTTP
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    # command: ["--config", "/etc/otel-collector-config.yaml"]
+    restart: always
+    depends_on:
+      - zipkin
   service_a:
     image: golang:1.24
     container_name: service_a
