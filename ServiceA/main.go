@@ -73,15 +73,18 @@ func initTracerProvider(ctx context.Context, res *resource.Resource, conn *grpc.
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
+	ctx := otel.GetTextMapPropagator().Extract(r.Context(), propagation.HeaderCarrier(r.Header))
 	/**
 	 * Instrumenta o handler com OpenTelemetry.
 	 */
 	// Pega o tracer global que configuramos
-	tracer := otel.Tracer("my-tracer")
+	tracer := otel.Tracer("service-a")
 
 	// Inicia um novo span. O contexto da requisição é usado como pai.
-	ctx, span := tracer.Start(r.Context(), "HandlerSpan")
+	ctx, span := tracer.Start(ctx, "StartHandlerSpan")
 	defer span.End() // É crucial finalizar o span
+
+	time.Sleep(2 * time.Second) // Simula algum processamento
 	/**
 	 * Fim da instrumentação do handler.
 	 */
@@ -136,7 +139,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func getTemperature(cep string, ctx context.Context) (string, error) {
 	// Intrumenta o span para a chamada interna
 	// Pega o tracer novamente (ou poderia ser passado como argumento)
-	tracer := otel.Tracer("my-tracer")
+	tracer := otel.Tracer("service-a")
 
 	// Inicia um span filho, pois estamos usando o contexto do `helloHandlerSpan`
 	_, span := tracer.Start(ctx, "GetTemperatureSpan")
@@ -153,6 +156,9 @@ func getTemperature(cep string, ctx context.Context) (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("error creating request for service B: %w", err)
 	}
+
+	// Withot this, the request won't carry the trace context to Service B
+	otel.GetTextMapPropagator().Inject(ctx, propagation.HeaderCarrier(req.Header))
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {

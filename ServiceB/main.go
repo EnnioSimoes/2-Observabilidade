@@ -68,12 +68,14 @@ func initTracerProvider(ctx context.Context, res *resource.Resource, conn *grpc.
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
+	ctx := otel.GetTextMapPropagator().Extract(r.Context(), propagation.HeaderCarrier(r.Header))
+
 	// Intrumenta o span para a chamada interna
 	// Pega o tracer novamente (ou poderia ser passado como argumento)
-	tracer := otel.Tracer("my-tracer")
+	tracer := otel.Tracer("service-b")
 
 	// Inicia um span filho, pois estamos usando o contexto do `helloHandlerSpan`
-	_, span := tracer.Start(r.Context(), "GetTemperatureSpan")
+	_, span := tracer.Start(ctx, "startGetTemperatureSpan")
 	defer span.End()
 
 	cep := chi.URLParam(r, "cep")
@@ -82,7 +84,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	addr, err := address.GetCep(cep)
+	addr, err := address.GetCep(cep, ctx)
 	if err != nil {
 		log.Println("Error getting address:", err)
 		w.WriteHeader(http.StatusUnprocessableEntity)
@@ -99,7 +101,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	temperature, err := weather.GetWeather(addr.Localidade)
+	temperature, err := weather.GetWeather(addr.Localidade, ctx)
 	if err != nil {
 		log.Println("Error getting temperature:", err)
 		w.WriteHeader(http.StatusInternalServerError)
