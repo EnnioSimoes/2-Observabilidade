@@ -8,3 +8,5 @@ Content-Type: application/json
 {
   "cep": "59010020"
 }
+
+//curl -X POST http://localhost:8080/temperature -H "Content-Type: application/json" -d '{"cep": "59010020"}'

@@ -1,0 +1,27 @@
+# otel-collector-config.yaml
+receivers:
+  otlp:
+    protocols:
+      grpc: # Nossa aplicação Go vai usar gRPC para enviar dados para esta porta
+        endpoint: 0.0.0.0:4317
+      http: # Também habilitamos a porta HTTP como opção
+        endpoint: 0.0.0.0:4318
+
+exporters:
+  # Exportador para o Zipkin
+  zipkin:
+    endpoint: "http://zipkin:9411/api/v2/spans" # 'zipkin' é o nome do serviço no docker-compose
+    format: proto # Formato preferido para o Zipkin moderno
+
+  # Exportador para o console (ótimo para depuração)
+  debug:
+
+processors:
+  batch: # Agrupa spans em lotes antes de exportar, melhorando a performance
+
+service:
+  pipelines:
+    traces: # Define o pipeline para dados de trace
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug, zipkin] # Envia para o console E para o Zipkin

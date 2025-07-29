@@ -5,8 +5,6 @@ Desenvolver um sistema em Go que receba um CEP, identifica a cidade e retorna o 
 
 Basedo no cenário conhecido "Sistema de temperatura por CEP" denominado Serviço B, será incluso um novo projeto, denominado Serviço A.
 
- 
-
 ## Requisitos - Serviço A (responsável pelo input):
 
 * O sistema deve receber um input de 8 dígitos via POST, através do schema:  { "cep": "29902555" }
@@ -51,32 +49,44 @@ Sendo K = Kelvin
   
 ## Entrega:
 
-O código-fonte completo da implementação.
-Documentação explicando como rodar o projeto em ambiente dev.
-Utilize docker/docker-compose para que possamos realizar os testes de sua aplicação.
+* O código-fonte completo da implementação.
+* Documentação explicando como rodar o projeto em ambiente dev.
+* Utilize docker/docker-compose para que possamos realizar os testes de sua aplicação.
 
 ## Run Development
 
+### Configurar ServiceA
+```
+cd ServiceA/
+```
+
+Para rodar via docker-compose não será necessário configurar as variaveis de ambiente pois as mesmas ja estão sendo passadas no docker-compose, este serviço possuí apenas variáveis para orientar qual é o host do serviço B, caso precise altera-las basta renomear ``` cp env.example .env ``` .
+
+### Configurar ServiceB
+Neste será preciso informar a chave do weatherapi
+```
+cd ServiceB/
+```
 ```
 cp env.example .env
-````
+```
+Preencha WEATHERAPI_KEY=
 
-Fill enviroment var WEATHERAPI_KEY=
+Para adiquirir um chave visite Weatherapi in https://www.weatherapi.com/my/
 
-Request your api key for Weatherapi in https://www.weatherapi.com/my/
-
-
-### Run Conteiner
+### Run Containers
 
 ```
 docker-compose up -d
 ```
-/temperature/{cep}
 
-Link Local http://localhost:8080/temperature/59010020
+### Teste o Endpoint
 
-### Run tests
-```
-docker exec -ti app go test ./...
-````
+Rode o arquivo em api/GetTemp.http
 
+ou
+
+curl -X POST http://localhost:8080/temperature -H "Content-Type: application/json" -d '{"cep": "59010020"}'
+
+### Link Zipkin
+http://127.0.0.1:9411/
