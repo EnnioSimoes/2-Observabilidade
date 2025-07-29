@@ -30,7 +30,7 @@ services:
     ports:
       - 8080:8080
     command: >
-      sh -c "go mod download && go run main.go"
+      sh -c "go mod tidy && go run main.go"
     volumes:
       - ./ServiceA:/app
   service_b:
@@ -41,6 +41,6 @@ services:
     ports:
       - 8081:8081
     command: >
-      sh -c "go mod download && go run main.go"
+      sh -c "go mod tidy && go run main.go"
     volumes:
       - ./ServiceB:/app

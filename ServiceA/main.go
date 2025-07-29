@@ -84,7 +84,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	ctx, span := tracer.Start(ctx, "StartHandlerSpan")
 	defer span.End() // É crucial finalizar o span
 
-	time.Sleep(2 * time.Second) // Simula algum processamento
+	time.Sleep(1 * time.Second) // Simula algum processamento
 	/**
 	 * Fim da instrumentação do handler.
 	 */

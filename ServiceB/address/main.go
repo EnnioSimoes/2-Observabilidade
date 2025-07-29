@@ -37,7 +37,7 @@ func GetCep(cep string, ctx context.Context) (*ViaCep, error) {
 	_, span := tracer.Start(ctx, "GetLocationByCepSpan")
 	defer span.End()
 
-	time.Sleep(2 * time.Second) // Simula algum processamento
+	time.Sleep(1 * time.Second) // Simula algum processamento
 
 	// Desabilitar a verificação do certificado SSL
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
