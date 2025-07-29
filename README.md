@@ -60,7 +60,11 @@ Sendo K = Kelvin
 cd ServiceA/
 ```
 
-Para rodar via docker-compose não será necessário configurar as variaveis de ambiente pois as mesmas ja estão sendo passadas no docker-compose, este serviço possuí apenas variáveis para orientar qual é o host do serviço B, caso precise altera-las basta renomear ``` cp env.example .env ``` .
+Este serviço possuí apenas variáveis para orientar qual é o host do serviço B, os valores padrão ja devem funcionar.
+
+```
+cp env.example .env
+```
 
 ### Configurar ServiceB
 Neste será preciso informar a chave do weatherapi
